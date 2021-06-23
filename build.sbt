@@ -2,9 +2,9 @@ import Dependencies._
 
 name := "gol"
 
-scalaVersion in ThisBuild := "2.10.3"
+ThisBuild / scalaVersion := "2.13.6"
 
 lazy val golProject = (
   Project("gol", file("."))
-  settings(libraryDependencies ++= golDependencies)
+    settings (libraryDependencies ++= golDependencies)
 )
