@@ -1,6 +1,5 @@
 package com.dyercode.gol
 
-import com.dyercode.gol.gol.{addNewCell, getEmptyBoard}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must
 
