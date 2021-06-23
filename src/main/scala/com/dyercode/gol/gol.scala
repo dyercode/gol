@@ -8,7 +8,7 @@ type Board = (Int, Int) => Cell
 
 def emptyBoard: Board = (_: Int, _: Int) => Dead
 
-def addNewCell(board: Board, x: Int, y: Int): Board = {
+def addLiveCell(board: Board, x: Int, y: Int): Board = {
   (newX: Int, newY: Int) =>
     if (newX == x && newY == y)
       Alive
@@ -30,7 +30,7 @@ def neighbors(x: Int, y: Int): Seq[(Int, Int)] = {
 }
 
 case class Size(width: Int, height: Int)
-def evolve(board: Board, size: Size): Board = {
+def tick(board: Board, size: Size): Board = {
   val nn: Seq[((Int, Int), Seq[(Int, Int)])] = for {
     x <- 0 to size.width
     y <- 0 to size.height
@@ -42,16 +42,21 @@ def evolve(board: Board, size: Size): Board = {
         value: ((Int, Int), Seq[(Int, Int)])
     ) =>
       {
-        val (coords, neighbors) = value
-        val liveNeighborCount = neighbors.count { case (x, y) =>
-          board(x, y) == Alive
-        }
-        if (liveNeighborCount < 2) {
-          acc
-        } else {
-          acc
+        val ((x, y), neighbors) = value
+        val liveNeighborCount = countNeighbors(board, neighbors)
+        board(x, y) match {
+          case Alive if liveNeighborCount < 2 || liveNeighborCount > 3 =>
+            acc
+          case Alive                          => addLiveCell(acc, x, y)
+          case Dead if liveNeighborCount == 3 => addLiveCell(acc, x, y)
+          case Dead                           => acc
         }
       }
   }
+}
 
+private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) = {
+  neighbors.count { case (x, y) =>
+    board(x, y) == Alive
+  }
 }

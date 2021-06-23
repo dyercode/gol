@@ -6,22 +6,22 @@ import org.scalatest.matchers.must
 
 class GameSuite extends AnyFunSuite with must.Matchers {
 
-  test("addNewCell must add a cell to the board at the given coordinates") {
-    val board = addNewCell(emptyBoard, 1, 1)
+  test("addLiveCell must add a cell to the board at the given coordinates") {
+    val board = addLiveCell(emptyBoard, 1, 1)
     board(1, 1) mustBe Alive
   }
 
-  test("addNewCell must maintain previous cells in the board") {
-    val board = addNewCell(emptyBoard, 1, 1)
-    val newBoard = addNewCell(board, 3, 3)
+  test("addLiveCell must maintain previous cells in the board") {
+    val board = addLiveCell(emptyBoard, 1, 1)
+    val newBoard = addLiveCell(board, 3, 3)
     newBoard(1, 1) mustBe Alive
     newBoard(3, 3) mustBe Alive
   }
 
   // Todo - property test this instead of hardcoded wrong cells
-  test("addNewCell must not have cells that weren't added") {
-    val board = addNewCell(emptyBoard, 1, 1)
-    val newBoard = addNewCell(board, 3, 3)
+  test("addLiveCell must not have living cells that weren't added") {
+    val board = addLiveCell(emptyBoard, 1, 1)
+    val newBoard = addLiveCell(board, 3, 3)
     newBoard(4, 4) mustBe Dead
     newBoard(7, 9) mustBe Dead
   }
@@ -29,21 +29,40 @@ class GameSuite extends AnyFunSuite with must.Matchers {
   test(
     "Any live cell with fewer than two live neighbours dies, as if caused by underpopulation."
   ) {
-    val board = addNewCell(emptyBoard, 1, 1)
-    val nextGeneration = evolve(board, Size(3, 3))
+    val board = addLiveCell(emptyBoard, 1, 1)
+    val nextGeneration = tick(board, Size(3, 3))
     nextGeneration(1, 1) mustBe Dead
   }
 
   test(
     "Any live cell with more than three live neighbours dies, as if by overcrowding."
   ) {
-    val testCell = addNewCell(emptyBoard, 1, 1)
-    val board = addNewCell(
-      addNewCell(addNewCell(addNewCell(testCell, 2, 0), 2, 1), 2, 2),
+    val testCell = addLiveCell(emptyBoard, 1, 1)
+    val board = addLiveCell(
+      addLiveCell(addLiveCell(addLiveCell(testCell, 2, 0), 2, 1), 2, 2),
       0,
       1
     )
-    val nextGeneration = evolve(board, Size(3, 3))
+    val nextGeneration = tick(board, Size(3, 3))
     nextGeneration(1, 1) mustBe Dead
+  }
+
+  test(
+    "Any live cell with two or three live neighbours lives on to the next generation."
+  ) {
+    val testCell = addLiveCell(emptyBoard, 1, 1)
+    val twoLivingNeighbors = addLiveCell(addLiveCell(testCell, 2, 0), 2, 1)
+    val threeLivingNeighbors = addLiveCell(twoLivingNeighbors, 2, 2)
+    tick(twoLivingNeighbors, Size(3, 3))(1, 1) mustBe Alive
+    tick(threeLivingNeighbors, Size(3, 3))(1, 1) mustBe Alive
+  }
+
+  test(
+    "Any dead cell with exactly three live neighbours becomes a live cell."
+  ) {
+    val twoLivingNeighbors = addLiveCell(addLiveCell(emptyBoard, 2, 0), 2, 1)
+    val threeLivingNeighbors = addLiveCell(twoLivingNeighbors, 2, 2)
+    tick(twoLivingNeighbors, Size(3, 3))(1, 1) mustBe Dead
+    tick(threeLivingNeighbors, Size(3, 3))(1, 1) mustBe Alive
   }
 }
