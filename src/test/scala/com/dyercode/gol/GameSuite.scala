@@ -33,4 +33,17 @@ class GameSuite extends AnyFunSuite with must.Matchers {
     val nextGeneration = evolve(board, Size(3, 3))
     nextGeneration(1, 1) mustBe Dead
   }
+
+  test(
+    "Any live cell with more than three live neighbours dies, as if by overcrowding."
+  ) {
+    val testCell = addNewCell(emptyBoard, 1, 1)
+    val board = addNewCell(
+      addNewCell(addNewCell(addNewCell(testCell, 2, 0), 2, 1), 2, 2),
+      0,
+      1
+    )
+    val nextGeneration = evolve(board, Size(3, 3))
+    nextGeneration(1, 1) mustBe Dead
+  }
 }
