@@ -4,6 +4,7 @@ enum Cell:
   case Alive, Dead
 
 import Cell._
+
 type Board = (Int, Int) => Cell
 
 def emptyBoard: Board = (_: Int, _: Int) => Dead
@@ -16,20 +17,8 @@ def addLiveCell(board: Board, x: Int, y: Int): Board = {
       board(newX, newY)
 }
 
-def neighbors(x: Int, y: Int): Seq[(Int, Int)] = {
-  Seq(
-    (x + 1, y),
-    (x + 1, y + 1),
-    (x + 1, y - 1),
-    (x, y + 1),
-    (x, y - 1),
-    (x - 1, y),
-    (x - 1, y + 1),
-    (x - 1, y - 1)
-  )
-}
-
 case class Size(width: Int, height: Int)
+
 def tick(board: Board, size: Size): Board = {
   val nn: Seq[((Int, Int), Seq[(Int, Int)])] = for {
     x <- 0 to size.width
@@ -47,6 +36,19 @@ def tick(board: Board, size: Size): Board = {
         case Dead                           => acc
       }
   }
+}
+
+private def neighbors(x: Int, y: Int): Seq[(Int, Int)] = {
+  Seq(
+    (x + 1, y),
+    (x + 1, y + 1),
+    (x + 1, y - 1),
+    (x, y + 1),
+    (x, y - 1),
+    (x - 1, y),
+    (x - 1, y + 1),
+    (x - 1, y - 1)
+  )
 }
 
 private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) = {
