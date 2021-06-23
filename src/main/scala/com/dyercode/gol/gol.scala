@@ -56,3 +56,7 @@ private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) = {
     board(x, y) == Alive
   }
 }
+
+extension (board: Board) {
+  def add(x: Int, y: Int): Board = addLiveCell(board, x, y)
+}
