@@ -31,8 +31,8 @@ def tick(board: Board, size: Size): Board = {
       board(x, y) match {
         case Alive if liveNeighborCount < 2 || liveNeighborCount > 3 =>
           acc
-        case Alive                          => addLiveCell(acc, x, y)
-        case Dead if liveNeighborCount == 3 => addLiveCell(acc, x, y)
+        case Alive                          => acc.addCell(x, y)
+        case Dead if liveNeighborCount == 3 => acc.addCell(x, y)
         case Dead                           => acc
       }
   }
@@ -58,5 +58,5 @@ private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) = {
 }
 
 extension (board: Board) {
-  def add(x: Int, y: Int): Board = addLiveCell(board, x, y)
+  def addCell(x: Int, y: Int): Board = addLiveCell(board, x, y)
 }

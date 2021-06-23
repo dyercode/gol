@@ -37,13 +37,13 @@ class GameSuite extends AnyFunSuite with must.Matchers {
   test(
     "Any live cell with more than three live neighbours dies, as if by overcrowding."
   ) {
-    val testCell = emptyBoard.add(1, 1)
+    val testCell = emptyBoard.addCell(1, 1)
     val board =
       testCell
-        .add(2, 0)
-        .add(2, 1)
-        .add(2, 2)
-        .add(0, 1)
+        .addCell(2, 0)
+        .addCell(2, 1)
+        .addCell(2, 2)
+        .addCell(0, 1)
     val nextGeneration = tick(board, Size(3, 3))
     nextGeneration(1, 1) mustBe Dead
   }
@@ -51,9 +51,9 @@ class GameSuite extends AnyFunSuite with must.Matchers {
   test(
     "Any live cell with two or three live neighbours lives on to the next generation."
   ) {
-    val testCell = emptyBoard.add(1, 1)
-    val twoLivingNeighbors = testCell.add(2, 0).add(2, 1)
-    val threeLivingNeighbors = twoLivingNeighbors.add(2, 2)
+    val testCell = emptyBoard.addCell(1, 1)
+    val twoLivingNeighbors = testCell.addCell(2, 0).addCell(2, 1)
+    val threeLivingNeighbors = twoLivingNeighbors.addCell(2, 2)
     tick(twoLivingNeighbors, Size(3, 3))(1, 1) mustBe Alive
     tick(threeLivingNeighbors, Size(3, 3))(1, 1) mustBe Alive
   }
@@ -61,8 +61,8 @@ class GameSuite extends AnyFunSuite with must.Matchers {
   test(
     "Any dead cell with exactly three live neighbours becomes a live cell."
   ) {
-    val twoLivingNeighbors = emptyBoard.add(2, 0).add(2, 1)
-    val threeLivingNeighbors = twoLivingNeighbors.add(2, 2)
+    val twoLivingNeighbors = emptyBoard.addCell(2, 0).addCell(2, 1)
+    val threeLivingNeighbors = twoLivingNeighbors.addCell(2, 2)
     tick(twoLivingNeighbors, Size(3, 3))(1, 1) mustBe Dead
     tick(threeLivingNeighbors, Size(3, 3))(1, 1) mustBe Alive
   }
