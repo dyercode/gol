@@ -1,18 +1,18 @@
 package com.dyercode.gol.web
 
+import com.dyercode.gol._
 import org.scalajs.dom
 import org.scalajs.dom.{CanvasRenderingContext2D, document}
-import com.dyercode.gol._
-import scalajs.js.timers.setInterval
 
 import scala.annotation.tailrec
 import scala.concurrent.duration._
+import scala.scalajs.js.timers.setInterval
 
 object GolApp {
 
   @main def run(): Unit = {
     val canvas = appendCanvas(document.body)
-    doCanvasThings(canvas)
+    renderGame(canvas)
   }
 
   val cellsWide = 40
@@ -25,7 +25,7 @@ object GolApp {
   val canvasWidth = gridWidth + (gridPadding * 2) + 1
   val canvasHeight = gridHeight + (gridPadding * 2) + 1
 
-  def doCanvasThings(c: dom.html.Canvas): Unit = {
+  def renderGame(c: dom.html.Canvas): Unit = {
     val ctx: CanvasRenderingContext2D = c
       .getContext("2d")
       .asInstanceOf[dom.CanvasRenderingContext2D]

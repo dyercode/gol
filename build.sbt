@@ -9,6 +9,11 @@ lazy val golProject = (
     settings (libraryDependencies ++= golDependencies)
 )
 
+lazy val benchmarkProject = (
+  Project("bench", file("benchmark"))
+).dependsOn(golProject)
+  .enablePlugins(JmhPlugin)
+
 lazy val webappProject = (
   Project("web", file("web"))
     settings (libraryDependencies ++= webappDependencies,
