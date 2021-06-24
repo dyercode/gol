@@ -21,3 +21,32 @@ jobs:
     - name: Build and test
       run: sbt -v -Dfile.encoding=UTF8 +test
       shell: bash
+  deploy:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: 16
+    runs-on: ${{ matrix.os }}
+    if: success() && github.ref == 'refs/heads/main'
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.${{ matrix.java }}"
+      - name: Compile
+        run: sbt web/fullLinkJS
+      - name: Package
+        run: |
+          mkdir dist
+          cp web/target/scala-3.0.0/web-opt/main.js ./dist/
+          cp index.html dist/
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages
+          folder: dist
