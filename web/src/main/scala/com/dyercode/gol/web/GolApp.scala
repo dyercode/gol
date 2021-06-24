@@ -13,7 +13,6 @@ object GolApp {
   @main def run(): Unit = {
     val canvas = appendCanvas(document.body)
     doCanvasThings(canvas)
-    println("hey")
   }
 
   val cellsWide = 40
@@ -36,19 +35,12 @@ object GolApp {
     drawBoard(ctx)
     drawNodes(ctx, board)
 
-    //    drawNodeLoop(ctx, board)
     setInterval(250.millis) {
       board = tick(board, Size(cellsWide, cellsHigh))
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+      drawBoard(ctx)
       drawNodes(ctx, board)
     }
-  }
-
-  @tailrec
-  def drawNodeLoop(ctx: CanvasRenderingContext2D, board: Board): Unit = {
-    println("about to draw")
-    drawNodes(ctx, board)
-    println("drawn")
-    drawNodeLoop(ctx, tick(board, Size(cellsWide, cellsHigh)))
   }
 
   def drawBoard(ctx: CanvasRenderingContext2D): Unit = {
@@ -70,16 +62,13 @@ object GolApp {
     (0 to cellsWide - 1).foreach { i =>
       (0 to cellsHigh - 1).foreach { j =>
         if (board(i, j) == Cell.Alive) {
-          ctx.fillStyle = "black"
-        } else {
-          ctx.fillStyle = "white"
+          ctx.fillRect(
+            (0.1 * i * 10 * gridPadding) + 3.0 + gridPadding,
+            (0.1 * j * 10 * gridPadding) + 2.5 + gridPadding,
+            6.0,
+            6.0
+          )
         }
-        ctx.fillRect(
-          (0.1 * i * 10 * gridPadding) + 3.0 + gridPadding,
-          (0.1 * j * 10 * gridPadding) + 2.5 + gridPadding,
-          6.0,
-          6.0
-        )
       }
     }
   }
