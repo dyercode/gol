@@ -4,9 +4,13 @@ import sbt._
 import Keys._
 
 object Dependencies {
-  val scalaTest = "org.scalatest" %% "scalatest" % "3.2.9"
+  object Versions {
+    val scalaTest = "3.2.9"
+  }
+  // scalajs breaks using these here since %%% is a macro that only works in sbt dsl
+//  val scalaTest = "org.scalatest" %% "scalatest" % "3.2.9"
 //  val scalajsDom = dep("org.scala-js" %%% "scalajs-dom" % "1.1.0").value
 
-  val golDependencies = Seq(scalaTest % Test)
-  val webappDependencies = Seq(scalaTest % Test)
+//  val golDependencies = Seq(scalaTest % Test)
+//  val webappDependencies = Seq(scalaTest % Test)
 }

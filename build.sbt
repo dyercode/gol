@@ -6,7 +6,7 @@ ThisBuild / scalaVersion := "3.0.0"
 
 lazy val golProject = (
   Project("gol", file("gol"))
-    settings (libraryDependencies ++= golDependencies)
+    settings (libraryDependencies += "org.scalatest" %%% "scalatest" % Versions.scalaTest % Test)
 )
 
 lazy val benchmarkProject = (
@@ -16,8 +16,9 @@ lazy val benchmarkProject = (
 
 lazy val webappProject = (
   Project("web", file("web"))
-    settings (libraryDependencies ++= webappDependencies,
-    scalaJSUseMainModuleInitializer := true,
-    libraryDependencies += ("org.scala-js" %%% "scalajs-dom" % "1.1.0")
-      .cross(CrossVersion.for3Use2_13))
+    settings (
+      libraryDependencies += ("org.scala-js" %%% "scalajs-dom" % "1.1.0")
+        .cross(CrossVersion.for3Use2_13),
+      scalaJSUseMainModuleInitializer := true
+    )
 ).dependsOn(golProject)
