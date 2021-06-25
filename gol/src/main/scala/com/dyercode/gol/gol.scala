@@ -19,36 +19,28 @@ def addLiveCell(board: Board, x: Int, y: Int): Board = {
 
 case class Size(width: Int, height: Int)
 
+def tickCell(x: Int, y: Int, board: Board): Cell = {
+  val neighborCount = countNeighbors(board, neighbors(x, y))
+  board(x, y) match {
+    case Alive if neighborCount < 2 || neighborCount > 3 => Dead
+    case Alive                                           => Alive
+    case Dead if neighborCount == 3                      => Alive
+    case Dead                                            => Dead
+  }
+}
+
 def tick(board: Board, size: Size): Board = {
-  var res: Board = board
-  (0 to size.width).foreach { x =>
-    (0 to size.height).foreach { y =>
-      val neighborCount = countNeighbors(board, neighbors(x, y))
-      board(x, y) match {
-        case Alive if neighborCount < 2 || neighborCount > 3 =>
-        case Alive                      => res = res.addCell(x, y)
-        case Dead if neighborCount == 3 => res = res.addCell(x, y)
-        case Dead                       =>
-      }
+  var res: Board = emptyBoard
+  for {
+    x <- (0 to size.width)
+    y <- (0 to size.height)
+  } {
+    tickCell(x, y, board) match {
+      case Alive => res = res.addCell(x, y)
+      case Dead  =>
     }
   }
   res
-//  val nn: Seq[((Int, Int), Seq[(Int, Int)])] = for {
-//    x <- 0 to size.width
-//    y <- 0 to size.height
-//  } yield ((x, y), neighbors(x, y))
-//
-//  nn.foldLeft(emptyBoard) {
-//    case (acc: Board, ((x, y), neighbors): ((Int, Int), Seq[(Int, Int)])) =>
-//      val liveNeighborCount = countNeighbors(board, neighbors)
-//      board(x, y) match {
-//        case Alive if liveNeighborCount < 2 || liveNeighborCount > 3 =>
-//          acc
-//        case Alive                          => acc.addCell(x, y)
-//        case Dead if liveNeighborCount == 3 => acc.addCell(x, y)
-//        case Dead                           => acc
-//      }
-//  }
 }
 
 private def neighbors(x: Int, y: Int): Seq[(Int, Int)] = {
