@@ -20,12 +20,10 @@ def addLiveCell(board: Board, x: Int, y: Int): Board = {
 case class Size(width: Int, height: Int)
 
 def tickCell(x: Int, y: Int, board: Board): Cell = {
-  val neighborCount = countNeighbors(board, neighbors(x, y))
-  board(x, y) match {
-    case Alive if neighborCount < 2 || neighborCount > 3 => Dead
-    case Alive                                           => Alive
-    case Dead if neighborCount == 3                      => Alive
-    case Dead                                            => Dead
+  (board(x, y), countNeighbors(board, neighbors(x, y))) match {
+    case (_, 3)     => Alive
+    case (Alive, 2) => Alive
+    case _          => Dead
   }
 }
 
