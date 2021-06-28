@@ -39,11 +39,11 @@ jobs:
         with:
           java-version: "adopt@1.${{ matrix.java }}"
       - name: Compile
-        run: sbt web/fullLinkJS
+        run: sbt fullLinkJS
       - name: Package
         run: |
           mkdir dist
-          cp web/target/scala-3.0.0/web-opt/main.js ./dist/
+          cp js/target/scala-3.0.0/gol-opt/* ./dist/
           cp index.html dist/
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.0

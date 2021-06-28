@@ -4,11 +4,7 @@ name := "gol"
 
 ThisBuild / scalaVersion := "3.0.0"
 
-lazy val golProject = project
-  .in(file("."))
-  .aggregate(golCross.js, golCross.jvm)
-
-lazy val golCross = crossProject(JSPlatform, JVMPlatform)
+lazy val gol = crossProject(JSPlatform, JVMPlatform)
   .in(file("."))
   .settings(
     libraryDependencies += "org.scalatest" %%% "scalatest" % Versions.scalaTest % Test
@@ -21,5 +17,5 @@ lazy val golCross = crossProject(JSPlatform, JVMPlatform)
 
 lazy val benchmarkProject = (
   Project("bench", file("benchmark"))
-).dependsOn(golProject)
+).dependsOn(gol.jvm)
   .enablePlugins(JmhPlugin)
