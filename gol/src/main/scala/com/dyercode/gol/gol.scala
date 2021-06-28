@@ -7,6 +7,10 @@ import Cell._
 
 type Board = (Int, Int) => Cell
 
+extension (board: Board) {
+  def addCell(x: Int, y: Int): Board = addLiveCell(board, x, y)
+}
+
 def emptyBoard: Board = (_: Int, _: Int) => Dead
 
 def addLiveCell(board: Board, x: Int, y: Int): Board = {
@@ -17,8 +21,6 @@ def addLiveCell(board: Board, x: Int, y: Int): Board = {
       board(newX, newY)
 }
 
-case class Size(width: Int, height: Int)
-
 def tickCell(x: Int, y: Int, board: Board): Cell = {
   (board(x, y), countNeighbors(board, neighbors(x, y))) match {
     case (_, 3)     => Alive
@@ -27,11 +29,11 @@ def tickCell(x: Int, y: Int, board: Board): Cell = {
   }
 }
 
-def tick(board: Board, size: Size): Board = {
+def tick(board: Board, bounds: Bounds): Board = {
   var res: Board = emptyBoard
   for {
-    x <- (0 to size.width)
-    y <- (0 to size.height)
+    x <- (bounds.minX to bounds.maxX)
+    y <- (bounds.minY to bounds.maxY)
   } {
     tickCell(x, y, board) match {
       case Alive => res = res.addCell(x, y)
@@ -60,6 +62,16 @@ private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) = {
   }
 }
 
-extension (board: Board) {
-  def addCell(x: Int, y: Int): Board = addLiveCell(board, x, y)
+trait Bounds {
+  def minX: Int
+  def minY: Int
+  def maxX: Int
+  def maxY: Int
+}
+
+case class Size(width: Int, height: Int) extends Bounds {
+  override val minX = 0
+  override val minY = 0
+  override val maxX = width
+  override val maxY = height
 }
