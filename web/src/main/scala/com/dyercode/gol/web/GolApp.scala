@@ -38,7 +38,7 @@ object GolApp {
       .getContext("2d")
       .asInstanceOf[dom.CanvasRenderingContext2D]
 
-    var board = prepBoard()
+    val board = prepBoard()
 
     drawBoard(ctx)
     drawNodes(ctx, board)
