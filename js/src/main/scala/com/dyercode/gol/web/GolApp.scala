@@ -38,7 +38,7 @@ object GolApp {
       .getContext("2d")
       .asInstanceOf[dom.CanvasRenderingContext2D]
 
-    val board = prepBoard()
+    val board = prepBoard
 
     drawBoard(ctx)
     drawNodes(ctx, board)
@@ -137,7 +137,7 @@ object GolApp {
     canvas
   }
 
-  def prepBoard(): Board = {
+  def prepBoard: Board = {
     // Pulsar
     emptyBoard
       .addCell(3, 4)
