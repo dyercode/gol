@@ -43,7 +43,7 @@ jobs:
       - name: Package
         run: |
           mkdir dist
-          cp js/target/scala-3.0.0/gol-opt/* ./dist/
+          cp js/target/scala-3.0.2/gol-opt/* ./dist/
           cp index.html dist/
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.0
