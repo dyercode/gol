@@ -32,6 +32,8 @@ jobs:
     if: success() && github.ref == 'refs/heads/main'
     needs: test
     steps:
+      - name: ScalaVersion
+        run: echo "scala_version=${{sbt about | grep 'The current project is built against Scala' | sed  's/[^0-9.]//g'}}" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup
@@ -43,7 +45,7 @@ jobs:
       - name: Package
         run: |
           mkdir dist
-          cp js/target/scala-3.0.2/gol-opt/* ./dist/
+          cp js/target/${{env.scala_version}}/gol-opt/* ./dist/
           cp index.html dist/
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.0
