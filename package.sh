@@ -1,4 +1,5 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+set -e
 mkdir dist
 # echo "scala_version=${{sbt about | grep 'The current project is built against Scala' | sed  's/[^0-9.]//g'}}" >> $GITHUB_ENV
 
