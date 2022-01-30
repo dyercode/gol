@@ -12,15 +12,15 @@ jobs:
             java: 16
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Setup
-      uses: olafurpg/setup-scala@v10
-      with:
-        java-version: "adopt@1.${{ matrix.java }}"
-    - name: Build and test
-      run: sbt -v -Dfile.encoding=UTF8 +test
-      shell: bash
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.${{ matrix.java }}"
+      - name: Build and test
+        run: sbt -v -Dfile.encoding=UTF8 +test
+        shell: bash
   deploy:
     strategy:
       fail-fast: false
@@ -44,9 +44,7 @@ jobs:
         run: sbt fullLinkJS
       - name: Package
         run: |
-          mkdir dist
-          cp js/target/${{env.scala_version}}/gol-opt/* ./dist/
-          cp index.html dist/
+          ./package.sh
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
