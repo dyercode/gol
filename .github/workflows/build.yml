@@ -38,8 +38,6 @@ jobs:
         uses: olafurpg/setup-scala@v10
         with:
           java-version: "adopt@1.${{ matrix.java }}"
-      - name: ScalaVersion
-        run: echo "scala_version=${{sbt about | grep 'The current project is built against Scala' | sed  's/[^0-9.]//g'}}" >> $GITHUB_ENV
       - name: Compile
         run: sbt fullLinkJS
       - name: Package
