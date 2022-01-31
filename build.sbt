@@ -2,7 +2,7 @@ import Dependencies._
 
 name := "gol"
 
-ThisBuild / scalaVersion := "3.0.2"
+ThisBuild / scalaVersion := "3.1.1"
 
 lazy val gol = crossProject(JSPlatform, JVMPlatform)
   .in(file("."))
@@ -10,12 +10,10 @@ lazy val gol = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies += "org.scalatest" %%% "scalatest" % Versions.scalaTest % Test
   )
   .jsSettings(
-    libraryDependencies += ("org.scala-js" %%% "scalajs-dom" % "1.2.0")
-      .cross(CrossVersion.for3Use2_13),
+    libraryDependencies += ("org.scala-js" %%% "scalajs-dom" % "2.1.0"),
     scalaJSUseMainModuleInitializer := true
   )
 
-lazy val benchmarkProject = (
-  Project("bench", file("benchmark"))
-).dependsOn(gol.jvm)
+lazy val benchmarkProject = Project("bench", file("benchmark"))
+  .dependsOn(gol.jvm)
   .enablePlugins(JmhPlugin)

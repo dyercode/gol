@@ -1,14 +1,14 @@
 package com.dyercode.gol.web
 
-import com.dyercode.gol._
-import com.dyercode.gol.web.GolApp.GameState._
+import com.dyercode.gol.*
+import com.dyercode.gol.web.GolApp.GameState.*
 import org.scalajs.dom
 import org.scalajs.dom.{CanvasRenderingContext2D, document, window}
 
 import scala.annotation.tailrec
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.scalajs.js.timers.setInterval
 import scala.util.{Failure, Success}
 
@@ -21,13 +21,13 @@ object GolApp {
 
   val cellsWide = 40
   val cellsHigh = 40
-  val gridWidth = cellsWide * 10
-  val gridHeight = cellsHigh * 10
+  val gridWidth: Int = cellsWide * 10
+  val gridHeight: Int = cellsHigh * 10
   val gridSize = 10
 
   val gridPadding = 10
-  val canvasWidth = gridWidth + (gridPadding * 2) + 1
-  val canvasHeight = gridHeight + (gridPadding * 2) + 1
+  val canvasWidth: Int = gridWidth + (gridPadding * 2) + 1
+  val canvasHeight: Int = gridHeight + (gridPadding * 2) + 1
 
   enum GameState:
     case Next(board: Board)
@@ -59,11 +59,9 @@ object GolApp {
       ctx: CanvasRenderingContext2D,
       lastFrame: Option[Double],
       state: GameState
-  ) = {
-    window.requestAnimationFrame(
-      animationLoop(ctx, lastFrame, state)
-    )
-  }
+  ): Int = window.requestAnimationFrame(
+    animationLoop(ctx, lastFrame, state)
+  )
 
   // timestamp = millis
   def animationLoop(
@@ -79,22 +77,18 @@ object GolApp {
           .onComplete {
             case Success(next: Board) =>
               requestAnimationFrame(ctx, lastFrame, Next(next))
-            case Failure(_) => {
+            case Failure(_) =>
               println("error running tick, retrying")
               requestAnimationFrame(ctx, lastFrame, gameState)
-            }
           }
       case Next(state) =>
         lastFrame match {
           case None => requestAnimationFrame(ctx, Some(timestamp), gameState)
-          case Some(last) => {
-            if (timestamp - last >= fps(4)) {
-              draw(ctx, state)
-              requestAnimationFrame(ctx, None, Current(state))
-            } else {
-              requestAnimationFrame(ctx, lastFrame, gameState)
-            }
-          }
+          case Some(last) if timestamp - last >= fps(4) =>
+            draw(ctx, state)
+            requestAnimationFrame(ctx, None, Current(state))
+          case Some(last) =>
+            requestAnimationFrame(ctx, lastFrame, gameState)
         }
     }
   }
@@ -115,8 +109,8 @@ object GolApp {
   }
 
   def drawNodes(ctx: CanvasRenderingContext2D, board: Board): Unit = {
-    (0 to cellsWide - 1).foreach { i =>
-      (0 to cellsHigh - 1).foreach { j =>
+    (0 until cellsWide).foreach { i =>
+      (0 until cellsHigh).foreach { j =>
         if (board(i, j) == Cell.Alive) {
           ctx.fillRect(
             (0.1 * i * 10 * gridPadding) + 3.0 + gridPadding,

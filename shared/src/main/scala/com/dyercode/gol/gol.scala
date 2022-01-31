@@ -3,7 +3,7 @@ package com.dyercode.gol
 enum Cell:
   case Alive, Dead
 
-import Cell._
+import com.dyercode.gol.Cell.*
 
 type Board = (Int, Int) => Cell
 
@@ -32,8 +32,8 @@ def tickCell(x: Int, y: Int, board: Board): Cell = {
 def tick(board: Board, bounds: Bounds): Board = {
   var res: Board = emptyBoard
   for {
-    x <- (bounds.minX to bounds.maxX)
-    y <- (bounds.minY to bounds.maxY)
+    x <- bounds.minX to bounds.maxX
+    y <- bounds.minY to bounds.maxY
   } {
     tickCell(x, y, board) match {
       case Alive => res = res.addCell(x, y)
@@ -72,6 +72,6 @@ trait Bounds {
 case class Size(width: Int, height: Int) extends Bounds {
   override val minX = 0
   override val minY = 0
-  override val maxX = width
-  override val maxY = height
+  override val maxX: Int = width
+  override val maxY: Int = height
 }

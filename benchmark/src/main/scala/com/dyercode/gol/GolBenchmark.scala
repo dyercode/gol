@@ -13,7 +13,7 @@ class GolBenchmark {
   @Benchmark
   @BenchmarkMode(Array(Mode.Throughput))
   @OutputTimeUnit(TimeUnit.SECONDS)
-  def measureThroughput: Unit = tick(pulsar, Size(50, 50))
+  def measureThroughput(): Unit = tick(pulsar, Size(50, 50))
 }
 
 val pulsar: Board = {
