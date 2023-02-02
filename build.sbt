@@ -2,7 +2,7 @@ import Dependencies._
 
 name := "gol"
 
-ThisBuild / scalaVersion := "3.1.1"
+ThisBuild / scalaVersion := "3.2.2"
 
 lazy val gol = crossProject(JSPlatform, JVMPlatform)
   .in(file("."))
@@ -10,7 +10,7 @@ lazy val gol = crossProject(JSPlatform, JVMPlatform)
     libraryDependencies += "org.scalatest" %%% "scalatest" % Versions.scalaTest % Test
   )
   .jsSettings(
-    libraryDependencies += ("org.scala-js" %%% "scalajs-dom" % "2.1.0"),
+    libraryDependencies += ("org.scala-js" %%% "scalajs-dom" % "2.3.0"),
     scalaJSUseMainModuleInitializer := true
   )
 

@@ -13,13 +13,12 @@ extension (board: Board) {
 
 def emptyBoard: Board = (_: Int, _: Int) => Dead
 
-def addLiveCell(board: Board, x: Int, y: Int): Board = {
+def addLiveCell(board: Board, x: Int, y: Int): Board =
   (newX: Int, newY: Int) =>
     if (newX == x && newY == y)
       Alive
     else
       board(newX, newY)
-}
 
 def tickCell(x: Int, y: Int, board: Board): Cell = {
   (board(x, y), countNeighbors(board, neighbors(x, y))) match {
@@ -43,7 +42,7 @@ def tick(board: Board, bounds: Bounds): Board = {
   res
 }
 
-private def neighbors(x: Int, y: Int): Seq[(Int, Int)] = {
+private def neighbors(x: Int, y: Int): Seq[(Int, Int)] =
   Seq(
     (x + 1, y),
     (x + 1, y + 1),
@@ -54,13 +53,11 @@ private def neighbors(x: Int, y: Int): Seq[(Int, Int)] = {
     (x - 1, y + 1),
     (x - 1, y - 1)
   )
-}
 
-private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) = {
+private def countNeighbors(board: Board, neighbors: Seq[(Int, Int)]) =
   neighbors.count { case (x, y) =>
     board(x, y) == Alive
   }
-}
 
 trait Bounds {
   def minX: Int

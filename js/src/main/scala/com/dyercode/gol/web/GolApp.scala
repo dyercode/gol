@@ -45,9 +45,7 @@ object GolApp {
     requestAnimationFrame(ctx, None, Current(board))
   }
 
-  def fps(fps: Double): Double = {
-    1000.0 / fps
-  }
+  def fps(fps: Double): Double = 1000.0 / fps
 
   def draw(ctx: CanvasRenderingContext2D, board: Board): Unit = {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
@@ -60,7 +58,7 @@ object GolApp {
       lastFrame: Option[Double],
       state: GameState
   ): Int = window.requestAnimationFrame(
-    animationLoop(ctx, lastFrame, state)
+    animationLoop(ctx, lastFrame, state)(_)
   )
 
   // timestamp = millis
