@@ -15,8 +15,10 @@ import scala.util.{Failure, Success}
 object GolApp {
 
   @main def run(): Unit = {
-    val canvas = appendCanvas(document.body)
-    renderGame(canvas)
+    val standard = appendCanvas(document.getElementById("standard"))
+    renderGame(standard)
+    val windy = appendCanvas(document.getElementById("windy"))
+    renderGame(windy, Config(true))
   }
 
   val cellsWide = 40
@@ -30,10 +32,13 @@ object GolApp {
   val canvasHeight: Int = gridHeight + (gridPadding * 2) + 1
 
   enum GameState:
-    case Next(board: Board)
-    case Current(board: Board)
+    case Next(board: Board, config: Config)
+    case Current(board: Board, config: Config)
+  case class Config(windy: Boolean)
+  val windy = Config(true)
+  val standard = Config(false)
 
-  def renderGame(c: dom.html.Canvas): Unit = {
+  def renderGame(c: dom.html.Canvas, config: Config = standard): Unit = {
     val ctx: CanvasRenderingContext2D = c
       .getContext("2d")
       .asInstanceOf[dom.CanvasRenderingContext2D]
@@ -42,7 +47,7 @@ object GolApp {
 
     drawBoard(ctx)
     drawNodes(ctx, board)
-    requestAnimationFrame(ctx, None, Current(board))
+    requestAnimationFrame(ctx, None, Current(board, config))
   }
 
   def fps(fps: Double): Double = 1000.0 / fps
@@ -61,30 +66,50 @@ object GolApp {
     animationLoop(ctx, lastFrame, state)(_)
   )
 
+  def blowBoard(inBoard: Board): Board = {
+    var blownBoard = emptyBoard
+    (0 until cellsWide).foreach { x =>
+      (0 until cellsHigh).foreach { y =>
+        inBoard(x, y) match {
+          case Cell.Alive => {
+            blownBoard = blownBoard.addCell(x + 1, y)
+          }
+          case Cell.Dead => ()
+        }
+      }
+    }
+    blownBoard
+  }
+
   // timestamp = millis
   def animationLoop(
       ctx: CanvasRenderingContext2D,
       lastFrame: Option[Double],
-      gameState: GameState
+      gameState: GameState,
+      windy: Boolean = false // todo - accept an algorithm instead
   )(
       timestamp: Double
   ): Unit = {
     gameState match {
-      case Current(board) =>
-        Future { tick(board, Size(cellsWide, cellsHigh)) }
+      case Current(board, config) =>
+        Future {
+          val tickedBoard = tick(board, Size(cellsWide, cellsHigh))
+          if (config.windy) { blowBoard(tickedBoard) }
+          else { tickedBoard }
+        }
           .onComplete {
             case Success(next: Board) =>
-              requestAnimationFrame(ctx, lastFrame, Next(next))
+              requestAnimationFrame(ctx, lastFrame, Next(next, config))
             case Failure(_) =>
               println("error running tick, retrying")
               requestAnimationFrame(ctx, lastFrame, gameState)
           }
-      case Next(state) =>
+      case Next(state, config) =>
         lastFrame match {
           case None => requestAnimationFrame(ctx, Some(timestamp), gameState)
           case Some(last) if timestamp - last >= fps(4) =>
             draw(ctx, state)
-            requestAnimationFrame(ctx, None, Current(state))
+            requestAnimationFrame(ctx, None, Current(state, config))
           case Some(last) =>
             requestAnimationFrame(ctx, lastFrame, gameState)
         }

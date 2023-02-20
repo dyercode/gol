@@ -4,3 +4,7 @@ target
 .bsp
 .metals
 dist
+.bloop
+.direnv
+metals.sbt
+project/project
