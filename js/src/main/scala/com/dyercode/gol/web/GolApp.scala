@@ -21,8 +21,8 @@ object GolApp {
     renderGame(windy, Config(true))
   }
 
-  val cellsWide = 40
-  val cellsHigh = 40
+  val cellsWide = 60
+  val cellsHigh = 25
   val gridWidth: Int = cellsWide * 10
   val gridHeight: Int = cellsHigh * 10
   val gridSize = 10
