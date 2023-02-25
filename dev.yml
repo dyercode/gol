@@ -1,4 +1,4 @@
 commands:
   build: sbt fastOptJS
-  release: sbt fullLinkJS
+  package: sbt fullLinkJS
   
