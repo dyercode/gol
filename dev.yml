@@ -1,5 +1,7 @@
 commands:
   build: sbt fastOptJS
   package: sbt fullLinkJS
-  test: sbt test
+  check: 
+  - sbt scalafmtCheck
+  - sbt test
   
