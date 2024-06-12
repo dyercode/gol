@@ -6,43 +6,27 @@ jobs:
   test:
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            java: 16
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
+      - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup
-        uses: olafurpg/setup-scala@v14
-        with:
-          java-version: "adopt@1.${{ matrix.java }}"
       - name: Build and test
-        run: sbt -v -Dfile.encoding=UTF8 +test
-        shell: bash
+        run: nix develop
+        run: dev check
   deploy:
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            java: 16
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     if: success() && github.ref == 'refs/heads/main'
     needs: test
     steps:
+      - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup
-        uses: olafurpg/setup-scala@v14
-        with:
-          java-version: "adopt@1.${{ matrix.java }}"
+        uses: actions/checkout@v4
       - name: Compile
-        run: sbt fullLinkJS
-      - name: Package
-        run: |
-          ./package.sh
+        run: nix develop
+        run: dev package
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
