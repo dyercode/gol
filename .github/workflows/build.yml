@@ -12,8 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build and test
-        run: nix develop
-        run: dev check
+        run: |
+          nix develop
+          dev check
   deploy:
     strategy:
       fail-fast: false
@@ -25,8 +26,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Compile
-        run: nix develop
-        run: dev package
+        run: |
+          nix develop
+          dev package
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
