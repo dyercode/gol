@@ -11,10 +11,10 @@ jobs:
       - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build and test
-        run: |
-          nix develop
-          dev check
+      - name: Setup Env
+        run: nix develop
+      - name: Run Checks
+        run: dev check
   deploy:
     strategy:
       fail-fast: false
@@ -25,10 +25,10 @@ jobs:
       - uses: cachix/install-nix-action@8887e596b4ee1134dae06b98d573bd674693f47c
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Env
+        run: nix develop
       - name: Compile
-        run: |
-          nix develop
-          dev package
+        run: dev package
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
